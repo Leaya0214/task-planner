@@ -32,6 +32,22 @@ class User extends Authenticatable
         return $this->role === self::ROLE_EMPLOYEE;
     }
 
+    /**
+     * Get the tasks assigned to the user.
+     */
+    public function tasks()
+    {
+        return $this->hasMany(Task::class, 'assigned_to');
+    }
+
+    /**
+     * Get the events created by the user.
+     */
+    public function events()
+    {
+        return $this->hasMany(Event::class, 'created_by');
+    }
+
     protected $hidden = [
         'password',
         'remember_token',

@@ -8,14 +8,14 @@ use Illuminate\Auth\Access\Response;
 
 class EventPolicy
 {
-   public function viewAny(User $user): bool
+    public function viewAny(User $user): bool
     {
         return $user->isAdmin();
     }
 
     public function view(User $user, Event $event): bool
     {
-        return $user->isAdmin() || $event->user_id === $user->id;
+        return $user->isAdmin() || $event->task->isAssignedTo($user);
     }
 
     public function create(User $user): bool
