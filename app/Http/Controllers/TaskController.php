@@ -26,7 +26,7 @@ class TaskController extends Controller
                 ->get();
         }
 
-        return Inertia::render('Tasks/Index', [
+        return Inertia::render('Task/Index', [
             'tasks' => $tasks,
             'canManageAll' => Gate::allows('manage-all-tasks'),
         ]);
@@ -38,7 +38,7 @@ class TaskController extends Controller
 
         $employees = User::where('role', 'employee')->get(['id', 'name']);
 
-        return Inertia::render('Tasks/Create', [
+        return Inertia::render('Task/Create', [
             'employees' => $employees,
         ]);
     }
@@ -59,7 +59,7 @@ class TaskController extends Controller
 
         $task->load('assignee', 'events');
 
-        return Inertia::render('Tasks/Show', [
+        return Inertia::render('Task/Show', [
             'task' => $task,
         ]);
     }
@@ -70,7 +70,7 @@ class TaskController extends Controller
 
         $employees = User::where('role', 'employee')->get(['id', 'name']);
 
-        return Inertia::render('Tasks/Edit', [
+        return Inertia::render('Task/Edit', [
             'task' => $task,
             'employees' => $employees,
         ]);

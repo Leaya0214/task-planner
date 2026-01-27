@@ -27,11 +27,11 @@ class Event extends Model
 
     public function getStartTimeAttribute()
     {
-        return $this->date . ' ' . $this->start_time;
+        return $this->date . ' ' . $this->attributes['start_time'];
     }
 
     public function getEndTimeAttribute()
     {
-        return $this->date . ' ' . $this->end_time;
+        return $this->date . ' ' . $this->attributes['end_time'];
     }
 }

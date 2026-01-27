@@ -24,7 +24,7 @@ class EventController extends Controller
                 ->get();
         }
 
-        return Inertia::render('Events/Index', [
+        return Inertia::render('Event/Index', [
             'events' => $events,
             'canManageAll' => Gate::allows('manage-all-events'),
         ]);
@@ -36,7 +36,7 @@ class EventController extends Controller
 
         $tasks = Task::all(['id', 'title']);
 
-        return Inertia::render('Events/Create', [
+        return Inertia::render('Event/Create', [
             'tasks' => $tasks,
         ]);
     }
@@ -57,7 +57,7 @@ class EventController extends Controller
 
         $event->load('task');
 
-        return Inertia::render('Events/Show', [
+        return Inertia::render('Event/Show', [
             'event' => $event,
         ]);
     }
@@ -68,7 +68,7 @@ class EventController extends Controller
 
         $tasks = Task::all(['id', 'title']);
 
-        return Inertia::render('Events/Edit', [
+        return Inertia::render('Event/Edit', [
             'event' => $event,
             'tasks' => $tasks,
         ]);

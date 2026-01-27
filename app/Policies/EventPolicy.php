@@ -10,7 +10,7 @@ class EventPolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->isAdmin();
+        return $user->isAdmin() || $user->isEmployee();
     }
 
     public function view(User $user, Event $event): bool
