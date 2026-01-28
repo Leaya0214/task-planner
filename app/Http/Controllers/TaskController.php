@@ -50,7 +50,6 @@ class TaskController extends Controller
     public function store(TaskRequest $request)
     {
         $this->authorize('create', Task::class);
-
         Task::create($request->validated());
 
         return redirect()->route('tasks.index')
@@ -77,6 +76,8 @@ class TaskController extends Controller
         return Inertia::render('Task/Edit', [
             'task' => $task,
             'employees' => $employees,
+            'canManageAll' => Gate::allows('manage-all-tasks'),
+            'userRole' => Auth::user()->role, // pass role for front-end
         ]);
     }
 

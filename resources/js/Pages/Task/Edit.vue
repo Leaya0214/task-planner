@@ -5,6 +5,7 @@ import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import { Head, useForm } from "@inertiajs/vue3";
+import dayjs from "dayjs";
 
 const props = defineProps({
     task: {
@@ -15,6 +16,14 @@ const props = defineProps({
         type: Array,
         required: true,
     },
+    canManageAll: {
+        type: Boolean,
+        required: true,
+    },
+    userRole: {
+        type: String,
+        required: true,
+    },
 });
 
 const form = useForm({
@@ -23,7 +32,9 @@ const form = useForm({
     assigned_to: props.task.assigned_to,
     status: props.task.status,
     priority: props.task.priority,
-    due_date: props.task.due_date,
+    due_date: props.task?.due_date
+        ? dayjs(props.task.due_date).format("YYYY-MM-DDTHH:mm")
+        : "",
 });
 
 const submit = () => {
@@ -59,7 +70,7 @@ const submit = () => {
                 >
                     <form @submit.prevent="submit" class="space-y-6">
                         <!-- Title Field -->
-                        <div>
+                        <div v-if="userRole === 'admin'">
                             <InputLabel
                                 for="title"
                                 value="Task Title"
@@ -101,7 +112,7 @@ const submit = () => {
                         </div>
 
                         <!-- Assigned User Field -->
-                        <div>
+                        <div v-if="canManageAll || userRole === 'admin'">
                             <InputLabel
                                 for="assigned_to"
                                 value="Assign to Employee"
@@ -158,7 +169,7 @@ const submit = () => {
                             </div>
 
                             <!-- Priority Field -->
-                            <div>
+                            <div v-if="canManageAll || userRole === 'admin'">
                                 <InputLabel
                                     for="priority"
                                     value="Priority"
@@ -182,7 +193,7 @@ const submit = () => {
                         </div>
 
                         <!-- Due Date & Time Field -->
-                        <div>
+                        <div v-if="canManageAll || userRole === 'admin'">
                             <InputLabel
                                 for="due_date"
                                 value="Due Date & Time"

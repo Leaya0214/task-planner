@@ -17,11 +17,16 @@ const props = defineProps({
     },
 });
 
+const formatTimeForInput = (time) => {
+    if (!time) return "";
+    return time.slice(0, 5); // "08:30:00" → "08:30"
+};
+
 const form = useForm({
-    name: props.event.name,
-    date: props.event.date,
-    start_time: props.event.attributes?.start_time || props.event.start_time,
-    end_time: props.event.attributes?.end_time || props.event.end_time,
+    name: props.event.name || "",
+    date: props.event.date ? props.event.date.split("T")[0] : "",
+    start_time: formatTimeForInput(props.event.start_time),
+    end_time: formatTimeForInput(props.event.end_time),
     task_id: props.event.task_id || "",
 });
 

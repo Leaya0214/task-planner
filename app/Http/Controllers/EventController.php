@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EventRequest;
 use App\Models\Task;
 use Inertia\Inertia;
 use App\Models\Event;
@@ -18,6 +19,7 @@ class EventController extends Controller
     {
         $this->calendarService = $calendarService;
     }
+
     public function index()
     {
         $this->authorize('viewAny', Event::class);
@@ -48,11 +50,15 @@ class EventController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(EventRequest $request)
     {
         $this->authorize('create', Event::class);
 
-        Event::create($request->validated());
+        $validated = $request->validated();
+
+        Event::create(array_merge($validated, [
+            'created_by' => Auth::id()
+        ]));
 
         return redirect()->route('events.index')
             ->with('success', 'Event created successfully.');
@@ -81,11 +87,13 @@ class EventController extends Controller
         ]);
     }
 
-    public function update(Request $request, Event $event)
+    public function update(EventRequest $request, Event $event)
     {
         $this->authorize('update', $event);
 
-        $event->update($request->validated());
+        $validated = $request->validated();
+
+        $event->update($validated);
 
         return redirect()->route('events.index')
             ->with('success', 'Event updated successfully.');
@@ -107,11 +115,13 @@ class EventController extends Controller
 
         $events = $this->calendarService->getEventsForUser(Auth::user());
         $formattedEvents = $this->calendarService->formatEventsForFullCalendar($events, Auth::user());
+        $tasks = Task::all(['id', 'title']);
 
         return Inertia::render('Event/Calendar', [
             'events' => $formattedEvents,
+            'tasks' => $tasks,
             'can' => [
-                'create' => $this->authorize('create', Event::class),
+                'create' => Gate::allows('create-event'),
                 'manageAll' => Gate::allows('manage-all-events'),
             ]
         ]);
@@ -148,6 +158,7 @@ class EventController extends Controller
             'end_time' => 'required|date_format:H:i|after:start_time',
         ]);
 
+
         $event->update($validated);
 
         return response()->json([
@@ -159,26 +170,17 @@ class EventController extends Controller
     /**
      * Quick create event from calendar
      */
-    public function quickStore(Request $request)
+    public function quickStore(EventRequest $request)
     {
         $this->authorize('create', Event::class);
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'date' => 'required|date',
-            'start_time' => 'required|date_format:H:i',
-            'end_time' => 'required|date_format:H:i|after:start_time',
-            'description' => 'nullable|string',
-        ]);
+        $validated = $request->validated();
 
-        $event = Event::create(array_merge($validated, [
-            'created_by' => Auth::id()
+        Event::create(array_merge($validated, [
+            'created_by' => Auth::id(),
         ]));
 
-        return response()->json([
-            'success' => true,
-            'event' => $this->calendarService->formatEventForFullCalendar($event, Auth::user()),
-            'message' => 'Event created successfully'
-        ]);
+        return redirect()->route('events.calendar')
+            ->with('success', 'Event created successfully');
     }
 }

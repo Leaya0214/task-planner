@@ -81,10 +81,13 @@ const isOverdue = (dueDate) => {
                         >
                             Tasks
                         </h1>
-                       <p class="mt-2 text-sm text-gray-600">
-                            {{ canManageAll ? 'Manage and track all tasks and events' : 'View and manage your assigned tasks and events' }}
+                        <p class="mt-2 text-sm text-gray-600">
+                            {{
+                                canManageAll
+                                    ? "Manage and track all tasks and events"
+                                    : "View and manage your assigned tasks and events"
+                            }}
                         </p>
-
                     </div>
                     <Link
                         v-if="canManageAll"
@@ -221,7 +224,6 @@ const isOverdue = (dueDate) => {
                                 View
                             </Link>
                             <Link
-                                v-if="canManageAll"
                                 :href="route('tasks.edit', task.id)"
                                 class="flex-1 px-4 py-2 text-center rounded-lg border border-blue-300 text-blue-700 font-medium hover:bg-blue-50 transition-all duration-200"
                             >
@@ -260,7 +262,11 @@ const isOverdue = (dueDate) => {
                         No tasks found
                     </h3>
                     <p class="text-gray-500 mb-6">
-                        Get started by creating your first task
+                        {{
+                            canManageAll
+                                ? "Get started by creating your first task"
+                                : "You have no tasks assigned to you"
+                        }}
                     </p>
                     <Link
                         v-if="canManageAll"

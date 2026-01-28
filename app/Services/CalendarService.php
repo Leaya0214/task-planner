@@ -14,7 +14,7 @@ class CalendarService
      */
     public function getEventsForUser(User $user, ?string $start = null, ?string $end = null)
     {
-        $query = Event::with(['task', 'creator']);
+        $query = Event::with(['task', 'createdBy']);
 
         // Apply date range filter if provided
         if ($start && $end) {
@@ -59,7 +59,7 @@ class CalendarService
                 'description' => $event->description ?? '',
                 'task_id' => $event->task_id,
                 'task_title' => $event->task?->title,
-                'created_by' => $event->creator->name,
+                'created_by' => $event->createdBy->name,
                 'editable' => $user->can('update', $event),
                 'deletable' => $user->can('delete', $event),
                 'priority' => $event->task?->priority ?? 'medium',
@@ -71,9 +71,16 @@ class CalendarService
     /**
      * Format date time for FullCalendar
      */
-    private function formatDateTime(string $date, string $time): string
+    private function formatDateTime($date, $time)
     {
-        return Carbon::parse($date . ' ' . $time)->toIso8601String();
+        if (strlen($time) == 5) { // H:i format
+            $time .= ':00';
+        }
+        return Carbon::createFromFormat(
+            'Y-m-d H:i:s',
+            $date . ' ' . $time,
+            'Asia/Dhaka'
+        )->toIso8601String();
     }
 
     /**

@@ -13,6 +13,7 @@ class Event extends Model
         'end_time',
         'task_id',
         'created_by',
+        'description',
     ];
 
     public function task()
@@ -23,15 +24,5 @@ class Event extends Model
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');
-    }
-
-    public function getStartTimeAttribute()
-    {
-        return $this->date . ' ' . $this->attributes['start_time'];
-    }
-
-    public function getEndTimeAttribute()
-    {
-        return $this->date . ' ' . $this->attributes['end_time'];
     }
 }

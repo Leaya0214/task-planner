@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,9 +19,14 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): Response
     {
+        $admin = User::where('role', 'admin')->select('id', 'name', 'email')->first();
+        $employee = User::where('role', 'employee')->select('id', 'name', 'email')->first();
+
         return Inertia::render('Auth/Login', [
             'canResetPassword' => Route::has('password.request'),
             'status' => session('status'),
+            'admin' => $admin,
+            'employee' => $employee,
         ]);
     }
 

@@ -35,6 +35,10 @@ class AppServiceProvider extends ServiceProvider
             return $user->isAdmin() || $user->isEmployee();
         });
 
+        Gate::define('create-event', function ($user) {
+            return $user->isAdmin();
+        });
+
         Gate::define('manage-all-tasks', function ($user) {
             return $user->isAdmin();
         });

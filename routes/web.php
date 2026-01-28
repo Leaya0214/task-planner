@@ -21,14 +21,14 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('tasks', TaskController::class);
-    Route::resource('events', EventController::class);
 
-    Route::prefix('events')->group(function () {
-        Route::get('/calendar', [EventController::class, 'calendar'])->name('events.calendar');
-        Route::get('/calendar/events', [EventController::class, 'calendarEvents'])->name('events.calendar.events');
-        Route::put('/{event}/update-date', [EventController::class, 'updateEventDate'])->name('events.update-date');
-        Route::post('/quick-store', [EventController::class, 'quickStore'])->name('events.quick-store');
-    });
+    // Event calendar routes (must be before resource routes)
+    Route::get('events/calendar', [EventController::class, 'calendar'])->name('events.calendar');
+    Route::get('events/calendar/events', [EventController::class, 'calendarEvents'])->name('events.calendar.events');
+    Route::put('events/{event}/update-date', [EventController::class, 'updateEventDate'])->name('events.update-date');
+    Route::post('events/quick-store', [EventController::class, 'quickStore'])->name('events.quick-store');
+
+    Route::resource('events', EventController::class);
 });
 
 

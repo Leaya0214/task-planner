@@ -7,13 +7,11 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 
-defineProps({
-    canResetPassword: {
-        type: Boolean,
-    },
-    status: {
-        type: String,
-    },
+const props = defineProps({
+    canResetPassword: Boolean,
+    status: String,
+    admin: Object,
+    employee: Object,
 });
 
 const form = useForm({
@@ -30,12 +28,12 @@ const submit = () => {
 
 // Demo credential functions
 const fillAdminCredentials = () => {
-    form.email = "admin@example.com";
+    form.email = props.admin.email;
     form.password = "password1234";
 };
 
 const fillEmployeeCredentials = () => {
-    form.email = "employee@example.com";
+    form.email = props.employee.email;
     form.password = "password1234";
 };
 </script>
