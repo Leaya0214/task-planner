@@ -18,10 +18,10 @@ class EventController extends Controller
         if (Gate::allows('manage-all-events')) {
             $events = Event::with('task')->latest()->get();
         } else {
-            $events = Event::where('created_by', Auth::id())
-                ->with('task')
-                ->latest()
-                ->get();
+            // Get events for tasks assigned to the authenticated user
+            $events = Event::whereHas('task.assignee', function ($q) {
+                $q->where('id', Auth::id());
+            })->with('task')->latest()->get();
         }
 
         return Inertia::render('Event/Index', [

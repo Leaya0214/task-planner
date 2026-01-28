@@ -81,9 +81,10 @@ const isOverdue = (dueDate) => {
                         >
                             Tasks
                         </h1>
-                        <p class="mt-2 text-sm text-gray-600">
-                            Manage and track all your tasks
+                       <p class="mt-2 text-sm text-gray-600">
+                            {{ canManageAll ? 'Manage and track all tasks and events' : 'View and manage your assigned tasks and events' }}
                         </p>
+
                     </div>
                     <Link
                         v-if="canManageAll"

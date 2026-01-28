@@ -25,6 +25,10 @@ class TaskController extends Controller
                 ->latest()
                 ->get();
         }
+        // JSON response for testing
+        if (request()->wantsJson()) {
+            return response()->json($tasks);
+        }
 
         return Inertia::render('Task/Index', [
             'tasks' => $tasks,

@@ -17,7 +17,7 @@ class PermissionTest extends TestCase
 
         $this->actingAs($admin);
 
-        $response = $this->get('/tasks');
+        $response = $this->get('/tasks', ['Accept' => 'application/json']);
 
         $response->assertStatus(200);
         $response->assertJsonCount(3); // assuming API
@@ -33,12 +33,26 @@ class PermissionTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function employee_cannot_create_events()
+    public function test_employee_cannot_create_events()
     {
         $employee = User::factory()->create(['role' => 'employee']);
         $this->actingAs($employee);
 
         $response = $this->get('/events/create');
         $response->assertStatus(403);
+    }
+
+    public function test_employee_can_view_assigned_tasks_only()
+    {
+        $employee = User::factory()->create(['role' => 'employee']);
+        Task::factory()->count(2)->create(); // tasks not assigned to employee
+        Task::factory()->create(['assigned_to' => $employee->id]); // task assigned to employee
+
+        $this->actingAs($employee);
+
+        $response = $this->get('/tasks', ['Accept' => 'application/json']);
+
+        $response->assertStatus(200);
+        $response->assertJsonCount(1); // only 1 task assigned to employee
     }
 }
