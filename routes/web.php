@@ -22,16 +22,14 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('tasks', TaskController::class);
     Route::resource('events', EventController::class);
+
+    Route::prefix('events')->group(function () {
+        Route::get('/calendar', [EventController::class, 'calendar'])->name('events.calendar');
+        Route::get('/calendar/events', [EventController::class, 'calendarEvents'])->name('events.calendar.events');
+        Route::put('/{event}/update-date', [EventController::class, 'updateEventDate'])->name('events.update-date');
+        Route::post('/quick-store', [EventController::class, 'quickStore'])->name('events.quick-store');
+    });
 });
 
-Route::middleware('auth')->get('/test-permissions', function () {
-    $user = Auth::user();
-
-    dd([
-        'is_admin'              => Gate::allows('view-dashboard'),
-        'can_manage_tasks'      => Gate::allows('manage-all-tasks'),
-        'can_manage_events'     => Gate::allows('manage-all-events'),
-    ]);
-});
 
 require __DIR__ . '/auth.php';
