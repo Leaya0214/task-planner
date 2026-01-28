@@ -26,7 +26,8 @@ It allows Admin and Employee users to manage tasks and events with role-based pe
     - Assign tasks to employees.
     - View all calendar events.
 - **Employee**
-    - View & update only their assigned tasks & events.
+    - View & update only their assigned tasks.
+    - View only their assigned events.
     - Cannot assign tasks/events to others.
 
 ### 2. Task Management
@@ -99,7 +100,7 @@ cd task-planner-app
 ```bash
 composer install
 npm install
-````
+```
 
 3. Configure environment:
 
@@ -185,7 +186,6 @@ task-planner-app/
 
 - `app/Http/Controllers/TaskController.php` - Task management
 - `app/Http/Controllers/EventController.php` - Event management & calendar
-- `app/Http/Controllers/DashboardController.php` - Dashboard
 
 ### Policies
 
@@ -212,14 +212,13 @@ task-planner-app/
 1. Run migrations: `php artisan migrate`
 2. Compile assets: `npm run build`
 3. Ensure storage & bootstrap/cache have correct permissions
-4. Optional: Separate CalendarController for cleaner code
 
 ---
 
 ## Git Commit Suggestion
 
 ```bash
-git add .
-git commit -m "Complete RBAC Task Planner & Calendar Event Management"
-git push origin main
+git clone <repo-url>
+cd task-planner
 ```
+````
