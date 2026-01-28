@@ -1,103 +1,222 @@
-# Laravel RBAC Task Planner & Calendar Event Management
+# RBAC Task & Event Planner
 
-This is a **Role-Based Access Control (RBAC) Task Planner & Calendar Event Management system** built with **Laravel 12** and **Vue 3 (Inertia.js)**. It allows **Admin** and **Employee** users to manage tasks and events with role-based permissions.
+## Overview
+
+This project is a **Role-Based Access Control (RBAC) Task Planner & Calendar Event Management System** built with **Laravel 12 + Vue 3 + Inertia.js**.  
+It allows Admin and Employee users to manage tasks and events with role-based permissions.
+
+---
+
+## Tech Stack
+
+- **Backend:** Laravel 12
+- **Frontend:** Vue 3 + Inertia.js + TailwindCSS
+- **Database:** MySQL
+- **Authentication:** Laravel Breeze
+- **Version Control:** Git
 
 ---
 
 ## Features
 
-### User Roles
+### 1. RBAC (Role-Based Access Control)
 
 - **Admin**
-    - Full access to tasks & events
-    - Assign tasks to employees
-    - Create, update, delete any event
+    - Create, update, delete any tasks & events.
+    - Assign tasks to employees.
+    - View all calendar events.
 - **Employee**
-    - Can view assigned tasks and events
-    - Can update limited fields of tasks/events (status, description)
-    - Cannot assign tasks
+    - View & update only their assigned tasks & events.
+    - Cannot assign tasks/events to others.
+
+### 2. Task Management
+
+- CRUD functionality:
+    - **Title**
+    - **Description**
+    - **Assigned user (Employee)**
+    - **Status:** Pending / In Progress / Completed
+    - **Priority:** Low / Medium / High
+    - **Due date & time**
+- Employees can update only **status & description**.
+- Admin can update all fields.
+- Validation & error handling implemented via **TaskRequest**.
+
+### 3. Event Management & Calendar
+
+- Event fields:
+    - **Name**
+    - **Description**
+    - **Date**
+    - **Start & End time**
+    - **Related Task (optional)**
+- Calendar view: Daily / Weekly / Monthly.
+- Role-based visibility:
+    - Admin sees all events.
+    - Employee sees only assigned or permitted events.
+- Drag & Drop for updating event time.
+- Validation via **EventRequest**.
+- Tasks linked to events optionally.
+
+### 4. Dashboard
+
+- Displays summary:
+    - Total tasks & completed tasks.
+    - Total events.
+    - Role-specific info.
+
+### 5. Authentication
+
+- Laravel Breeze for login/register.
+- Demo credentials displayed on login page.
 
 ---
 
-### Task Module
+## Project Flow
 
-- **Fields**: title, description, assigned user, status, priority, due date
-- **Validation**
-    - Admin: all fields required/validated
-    - Employee: only status and description editable
-- **Controller**: CRUD operations via `TaskController`
-- **Vue Views**:
-    - Task List (`Index`)
-    - Task Details (`Show`)
-    - Task Edit (`Edit`)
-- Dynamic badges for status & priority
-- Role-based action buttons (Edit, Delete, View)
-
----
-
-### Event Module
-
-- **Fields**: name, date, start_time, end_time, description, related task (optional), created_by
-- **Validation**: via `EventRequest` and manual controller validation
-- **Controller**: `EventController`
-    - Quick create (`quickStore`)
-    - Update (`update`, `updateEventDate` for calendar)
-- Employee can update only permitted fields
-- Calendar integration with **FullCalendar**
-    - Daily/Weekly/Monthly views
-    - Drag & drop to change date/time
-    - Role-based visibility
-        - Admin sees all events
-        - Employee sees only assigned events or task-related events
-- Optional task assignment dropdown when creating/updating event
+1. **Login**
+    - Admin or Employee credentials.
+2. **Dashboard**
+    - Overview of tasks & events based on role.
+3. **Tasks**
+    - Admin: Create, assign, update, delete tasks.
+    - Employee: Update assigned tasks.
+4. **Events & Calendar**
+    - Admin: Create, update, assign events.
+    - Employee: View/update own events.
+5. **Validation & Permissions**
+    - Requests validated via **FormRequest** classes.
+    - Actions authorized using **Gates & Policies**.
 
 ---
 
-### Dashboard
+git clone <repo-url>
+cd task-planner-app
 
-- Welcome message with user name
-- Displays role (Admin/Employee)
-- Task statistics: total, completed, pending, in-progress
-- Event statistics: total events
-- Role-based access message
+````
+
+2. Install dependencies:
+```bash
+composer install
+npm install
+````
+
+3. Configure environment:
+
+    ```bash
+    cp .env.example .env
+    ```
+
+    - Update database credentials in `.env`:
+        ```env
+        DB_CONNECTION=mysql
+        DB_HOST=localhost
+        DB_PORT=3306
+        DB_DATABASE=task_planner
+        DB_USERNAME=root
+        DB_PASSWORD=
+        ```
+
+4. Generate application key:
+
+    ```bash
+    php artisan key:generate
+    ```
+
+5. Run migrations:
+
+    ```bash
+    php artisan migrate
+    ```
+
+6. Seed database (optional):
+    ```bash
+    php artisan db:seed
+    ```
+7. Start development server:
+
+## Demo Credentials
+
+### Admin User
+
+- **Email:** [EMAIL_ADDRESS]`
+- **Password:** password
+
+### Employee User
+
+- **Email:** [EMAIL_ADDRESS]`
+- **Password:** password
 
 ---
 
-### Authentication
+## Project Structure
 
-- Login page supports autofill demo credentials for Admin and Employee
-- Props passed from controller: `admin`, `employee`
-- Demo credentials: email & password fields
-
----
-
-### Implementation Notes
-
-- **RBAC**: Policies and Gates
-    - TaskPolicy, EventPolicy
-    - Gates for `manage-all-tasks`, `create-event`
-- **Time Handling**: DB stored as `H:i:s`, form input `HH:mm`, validation handled
-- **Frontend**:
-    - Vue 3 + Inertia.js
-    - TailwindCSS
-    - Reusable components: TextInput, InputError, InputLabel, PrimaryButton
-- **Backend**: Laravel 12
-    - Controllers: TaskController, EventController
-    - Calendar-related event logic currently in EventController
-
----
-
-### Deployment Notes
-
-- Run migrations and seeders before use
-- Set `.env` for production
-- Ensure `storage` and `bootstrap/cache` have correct permissions
-- Install Composer dependencies on server
-- Optional: can separate CalendarController for cleaner code
+```
+task-planner-app/
+├── app/
+│   ├── Http/Controllers/  # Controllers
+│   ├── Models/              # Models
+│   ├── Policies/            # Authorization Policies
+│   └── Http/Requests/       # Form Requests
+│   ├── Services/            # Services
+├── bootstrap/
+├── config/
+├── database/
+│   ├── migrations/          # Database migrations
+│   └── seeders/             # Database seeders
+├── public/
+├── resources/
+│   ├── js/
+│   │   ├── Components/      # Vue components
+│   │   ├── Layouts/         # Layout components
+│   │   └── Pages/           # Page components
+│   └── css/
+├── routes/
+├── tests/
+├── storage/
+└── vendor/
+```
 
 ---
 
-### Git Commit Suggestion
+## Key Files
+
+### Controllers
+
+- `app/Http/Controllers/TaskController.php` - Task management
+- `app/Http/Controllers/EventController.php` - Event management & calendar
+- `app/Http/Controllers/DashboardController.php` - Dashboard
+
+### Policies
+
+- `app/Policies/TaskPolicy.php` - Task authorization
+- `app/Policies/EventPolicy.php` - Event authorization
+
+### Requests
+
+- `app/Http/Requests/TaskRequest.php` - Task validation
+- `app/Http/Requests/EventRequest.php` - Event validation
+
+### Vue Components
+
+- `resources/js/Pages/Task/Index.vue` - Task list
+- `resources/js/Pages/Task/Show.vue` - Task details
+- `resources/js/Pages/Task/Edit.vue` - Task edit
+- `resources/js/Pages/Event/Calendar.vue` - Calendar view
+- `resources/js/Pages/Dashboard.vue` - Dashboard
+
+---
+
+## Deployment Notes
+
+1. Run migrations: `php artisan migrate`
+2. Compile assets: `npm run build`
+3. Ensure storage & bootstrap/cache have correct permissions
+4. Optional: Separate CalendarController for cleaner code
+
+---
+
+## Git Commit Suggestion
 
 ```bash
 git add .
