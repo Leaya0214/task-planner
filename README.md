@@ -215,10 +215,4 @@ task-planner-app/
 
 ---
 
-## Git Commit Suggestion
-
-```bash
-git clone <repo-url>
-cd task-planner
-```
 ````
